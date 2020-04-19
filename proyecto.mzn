@@ -25,19 +25,21 @@ array[1..rows] of var int: Costos_Var; % Costos de los actores
 constraint forall(i in 1..rows, j in 1..cols-1) (Matriz_Var[i,j] = Escenas[i,j]); % Rellenamos matriz de decisión
 constraint forall(i in 1..rows) (Costos_Var[i] = Escenas[i,cols]); % Obtenemos costos de los actores
 
-% function var int: costo_obra(array[int, int] of var int: matrix, array[int] of var int: cost) = 
-
-function var int: getIndexOfFirstOcurrence(int: num, 
-                               array[int] of var int: arr) = 
+function int: getIndexOfFirstOcurrence(int: num, 
+                               array[int] of int: arr) = 
    min([if num = arr[i] then i else length(arr) endif | i in index_set(arr)]);
    
-function var int: getIndexOfLastOcurrence(int: num, 
-                               array[int] of var int: arr) = 
+function int: getIndexOfLastOcurrence(int: num, 
+                               array[int] of int: arr) = 
    max([if num = arr[i] then i else -length(arr) endif | i in index_set(arr)]);
- 
-array[int] of var int: arraysito = [0, 1, 1, 1, 1, 0];
- 
-var int: pos1 = getIndexOfFirstOcurrence(1, arraysito);
-var int: pos2 = getIndexOfLastOcurrence(1, arraysito);
 
-output [show2d(Matriz_Var)] ++ ["Costos = \(Costos_Var) \nArray con numeros de escenas = \(Array_Numeros_Escenas)\nensayo = \(pos1), \(pos2)"];
+function var int: getTotalTimeOfActorInSet(array[int] of int: actor_enrollment, array[int] of int: duration) =
+   sum([duration[i] | i in getIndexOfFirstOcurrence(1, actor_enrollment)..getIndexOfLastOcurrence(1, actor_enrollment)]);
+
+% function var int: costo_obra(array[int, int] of var int: matrix, array[int] of var int: cost) = 
+
+array[int] of int: row1 = [Escenas[2,j] | j in 1..number_of_scenes];
+
+var int: actor2 = getTotalTimeOfActorInSet(row1, Duracion);
+
+output [show2d(Matriz_Var)] ++ ["Costos = \(Costos_Var) \nArray con numeros de escenas = \(Array_Numeros_Escenas)\n\(actor2)"];
