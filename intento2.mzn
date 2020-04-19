@@ -20,7 +20,6 @@ array[1..rows, 1..number_of_scenes] of 0..1: Escenas_Solamente = array2d(1..rows
 
 array[1..number_of_scenes] of var 1..number_of_scenes: x;
 constraint alldifferent(x);
-constraint increasing(x);
 
 array[1..rows, 1..number_of_scenes] of var 0..1: Escenas_Solamente_Var = array2d(1..rows, 1..number_of_scenes, [Escenas[i,x[j]] | i in 1..rows, j in 1..number_of_scenes]);
 
@@ -35,9 +34,11 @@ function var int: getIndexOfLastOcurrence(int: num,
 function var set of int: getSetOfOne(array[int] of var int: arr) =
      getIndexOfFirstOcurrence(1, arr)..getIndexOfLastOcurrence(1, arr);
 
+var set of int: set1 = getSetOfOne([Escenas_Solamente_Var[1,j] | j in 1..number_of_scenes]);
+
 function array[int] of var set of int: getSetsOfOnes(array[int, int] of var int: matrix) =
   [getSetOfOne([matrix[i,j] | j in 1..number_of_scenes]) | i in 1..rows];
 
+array[int] of var set of int: arr1 = getSetsOfOnes(Escenas_Solamente_Var);
 
-
-output [show2d(Escenas_Solamente) ++ "\(x)\n" ++ show2d(Escenas_Solamente_Var)];
+output [show2d(Escenas_Solamente) ++ "\(x)\n" ++ show2d(Escenas_Solamente_Var)] ++ ["\(arr1)"];
