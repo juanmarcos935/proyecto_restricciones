@@ -1,3 +1,7 @@
+include "globals.mzn";
+
+% Inicio Entrada Dada para el Problema 
+
 enum ACTORES = {Actor1, Actor2, Actor3};
 
 int: number_of_scenes = 6;
@@ -10,13 +14,30 @@ array[1..rows, 1..cols] of int: Escenas = [|0,1,0,0,0,0,10
            
 array[1..number_of_scenes] of int: Duracion = [2,1,1,1,3,4];
 
-array[1..rows, 1..cols-1] of var 0..1: Matriz_Var;
-array[1..rows] of var int: Costos_Var;
+% Fin Entrada Dada para el Problema
 
-constraint forall(i in 1..rows, j in 1..cols-1) (Matriz_Var[i,j] = Escenas[i,j]);
-constraint forall(i in 1..rows) (Costos_Var[i] = Escenas[i,cols]);
+array[1..number_of_scenes] of var 1..number_of_scenes: Array_Numeros_Escenas;
+constraint alldifferent(Array_Numeros_Escenas);
 
-array[1..rows] of var int: comienzo;
-constraint forall(i in 1..rows, j in 1..cols-1) ([]);
+array[1..rows, index_set(Array_Numeros_Escenas)] of var 0..1: Matriz_Var; % Matriz de decisión
+array[1..rows] of var int: Costos_Var; % Costos de los actores
 
-output["\(Matriz_Var)\n\(Costos_Var)\n\(comienzo)"];
+constraint forall(i in 1..rows, j in 1..cols-1) (Matriz_Var[i,j] = Escenas[i,j]); % Rellenamos matriz de decisión
+constraint forall(i in 1..rows) (Costos_Var[i] = Escenas[i,cols]); % Obtenemos costos de los actores
+
+% function var int: costo_obra(array[int, int] of var int: matrix, array[int] of var int: cost) = 
+
+function var int: getIndexOfFirstOcurrence(int: num, 
+                               array[int] of var int: arr) = 
+   min([if num = arr[i] then i else length(arr) endif | i in index_set(arr)]);
+   
+function var int: getIndexOfLastOcurrence(int: num, 
+                               array[int] of var int: arr) = 
+   max([if num = arr[i] then i else -length(arr) endif | i in index_set(arr)]);
+ 
+array[int] of var int: arraysito = [0, 1, 1, 1, 1, 0];
+ 
+var int: pos1 = getIndexOfFirstOcurrence(1, arraysito);
+var int: pos2 = getIndexOfLastOcurrence(1, arraysito);
+
+output [show2d(Matriz_Var)] ++ ["Costos = \(Costos_Var) \nArray con numeros de escenas = \(Array_Numeros_Escenas)\nensayo = \(pos1), \(pos2)"];
