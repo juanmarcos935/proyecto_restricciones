@@ -12,13 +12,13 @@ array[1..rows, 1..cols] of int: Escenas = [|0,1,0,0,0,0,10
                                            |0,1,1,1,0,1,20
                                            |0,0,0,0,1,1,15|]; 
            
-array[1..number_of_scenes] of int: Duracion = [2,1,1,1,3,4];
+array[1..6] of int: Duracion = [2,1,1,1,3,4];
+
+% Fin Entrada Dada para el Problema
 
 array[1..rows, 1..number_of_scenes] of 0..1: Escenas_Solamente = array2d(1..rows, 1..number_of_scenes, [Escenas[i,j] | i in 1..rows, j in 1..number_of_scenes]);
 
 array[1..rows] of int: Costos = [Escenas[i, cols] | i in 1..rows];
-
-% Fin Entrada Dada para el Problema
 
 array[1..number_of_scenes] of var 1..number_of_scenes: x;
 constraint alldifferent(x);

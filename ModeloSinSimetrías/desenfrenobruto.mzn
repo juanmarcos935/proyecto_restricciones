@@ -25,6 +25,7 @@ array[1..rows] of int: Costos = [Escenas[i, cols] | i in 1..rows];
 
 % Fin Entrada Dada para el Problema
 
+
 array[1..number_of_scenes] of var 1..number_of_scenes: x;
 constraint alldifferent(x);
 
