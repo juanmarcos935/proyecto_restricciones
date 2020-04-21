@@ -25,6 +25,7 @@ array[1..rows] of int: individual_costs = [Escenas[i, cols] | i in 1..rows];
 array[1..number_of_scenes] of var 1..number_of_scenes: scenes_variable_order;
 constraint alldifferent(scenes_variable_order);
 
+
 array[1..number_of_scenes] of var int: variable_duration = [Duracion[scenes_variable_order[i]] | i in 1..number_of_scenes];
 
 array[1..rows, 1..number_of_scenes] of var 0..1: only_scenes_decision_variable = array2d(1..rows, 1..number_of_scenes, [Escenas[i,scenes_variable_order[j]] | i in 1..rows, j in 1..number_of_scenes]);
@@ -44,9 +45,9 @@ function array[int] of var set of int: getSetsOfOnes(array[int, int] of var int:
   [getSetOfOne([matrix[i,j] | j in 1..number_of_scenes]) | i in 1..rows];
 
 function array[int] of var int: getTotalTimes(array[int] of var set of int: set_times, array[int] of var int: duration) =
-  [sum([duration[j] | j in set_times[i] where j > 0]) | i in 1..rows ];
+  [sum([duration[j] | j in set_times[i] where j > 0]) | i in 1..rows];
 
-var set of int: set1 = getSetOfOne([only_scenes_decision_variable[1,j] | j in 1..number_of_scenes]);
+% var set of int: set1 = getSetOfOne([only_scenes_decision_variable[1,j] | j in 1..number_of_scenes]);
 
 array[int] of var set of int: arr1 = getSetsOfOnes(only_scenes_decision_variable);
 
@@ -56,4 +57,6 @@ var int: f = sum([arr2[i] * individual_costs[i] | i in 1..rows]);
 
 solve minimize f;
 
-output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(arr1)\n\(variable_duration)\n\(arr2)\n\(individual_costs)\n\(f)"];
+%output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(arr1)\n\(variable_duration)\n\(arr2)\n\(individual_costs)\n\(f)"];
+
+output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)"];
