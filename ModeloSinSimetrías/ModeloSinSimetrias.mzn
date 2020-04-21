@@ -1,30 +1,20 @@
 include "globals.mzn";
 
 % Inicio Entrada Dada para el Problema 
- 
-enum ACTORES = {Actor1, Actor2, Actor3, Actor4, Actor5, Actor6, Actor7, Actor8};
 
-int: number_of_scenes = 20;
+enum ACTORES;
+array[int, int] of int: Escenas; 
+array[int] of int: Duracion;
+
+% Fin Entrada Dada para el Problema
+
 int: rows = length(ACTORES);
-int: cols = number_of_scenes + 1;
-
-array[1..rows, 1..cols] of int: Escenas = [| 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10
-| 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 4
-| 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 5
-| 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 5
-| 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 5
-| 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 40 
-| 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 4 
-| 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20|]; 
-           
-array[1..number_of_scenes] of int: Duracion = [2 , 1 , 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1];
+int: cols = length(Duracion) + 1;
+int: number_of_scenes = length(Duracion);
 
 array[1..rows, 1..number_of_scenes] of 0..1: Escenas_Solamente = array2d(1..rows, 1..number_of_scenes, [Escenas[i,j] | i in 1..rows, j in 1..number_of_scenes]);
 
 array[1..rows] of int: Costos = [Escenas[i, cols] | i in 1..rows];
-
-% Fin Entrada Dada para el Problema
-
 
 array[1..number_of_scenes] of var 1..number_of_scenes: x;
 constraint alldifferent(x);
