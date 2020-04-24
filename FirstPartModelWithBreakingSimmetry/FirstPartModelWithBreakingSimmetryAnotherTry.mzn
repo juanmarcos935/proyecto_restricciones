@@ -30,6 +30,7 @@ array[1..number_of_scenes] of var int: variable_duration = [Duracion[scenes_vari
 
 array[1..rows, 1..number_of_scenes] of var 0..1: only_scenes_decision_variable = array2d(1..rows, 1..number_of_scenes, [Escenas[i,scenes_variable_order[j]] | i in 1..rows, j in 1..number_of_scenes]);
 
+constraint forall(i in 1..number_of_scenes-1) (if [only_scenes_decision_variable[j,i] | j in 1..rows] = [only_scenes_decision_variable[j,i+1] | j in 1..rows] then scenes_variable_order[i] < scenes_variable_order[i+1] endif);
 
 function var int: getIndexOfFirstOcurrence(int: num, 
                                array[int] of var int: arr) = 
