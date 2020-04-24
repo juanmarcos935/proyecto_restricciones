@@ -35,7 +35,7 @@ predicate areTheseArraysEqual(array[int] of var int: array1, array[int] of var i
 
 constraint forall(i in 1..number_of_scenes-1) (areTheseArraysEqual([only_scenes_decision_variable[j,i] | j in 1..rows],[only_scenes_decision_variable[j,i+1] | j in 1..rows]) -> scenes_variable_order[i] < scenes_variable_order[i+1]); % Posible Breaking Simmetry (not confirmed yet): if column[i] is equal to column[i+1], then the scenes order would be ordered [i] < [i+1]
 
-constraint forall(i in 1..number_of_scenes-1, k in 1..number_of_scenes-1) (areTheseArraysEqual([only_scenes_decision_variable[j,i] | j in 1..rows],[only_scenes_decision_variable[j,k] | j in 1..rows where k > i]) -> scenes_variable_order[i] < scenes_variable_order[k]); % Posible Breaking Simmetry 2 (not confirmed yet): if any column[i] is equal to some column[k], then the scenes order would be ordered [i] < [k] 
+%constraint forall(i in 1..number_of_scenes-1, k in 1..number_of_scenes-1) (areTheseArraysEqual([only_scenes_decision_variable[j,i] | j in 1..rows],[only_scenes_decision_variable[j,k] | j in 1..rows where k > i]) -> scenes_variable_order[i] < scenes_variable_order[k]); % Posible Breaking Simmetry 2 (not confirmed yet): if any column[i] is equal to some column[k], then the scenes order would be ordered [i] < [k] 
 
 function var int: getIndexOfFirstOcurrence(int: num, 
                                array[int] of var int: arr) = 

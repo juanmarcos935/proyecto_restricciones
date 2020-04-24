@@ -30,7 +30,12 @@ array[1..number_of_scenes] of var int: variable_duration = [Duracion[scenes_vari
 
 array[1..rows, 1..number_of_scenes] of var 0..1: only_scenes_decision_variable = array2d(1..rows, 1..number_of_scenes, [Escenas[i,scenes_variable_order[j]] | i in 1..rows, j in 1..number_of_scenes]);
 
-constraint forall(i in 1..number_of_scenes-1) (if [only_scenes_decision_variable[j,i] | j in 1..rows] = [only_scenes_decision_variable[j,i+1] | j in 1..rows] then scenes_variable_order[i] < scenes_variable_order[i+1] endif);
+constraint forall(i in 1..number_of_scenes-1) (if [only_scenes_decision_variable[j,i] | j in 1..rows] = [only_scenes_decision_variable[j,i+1] | j in 1..rows] then scenes_variable_order[i] < scenes_variable_order[i+1] endif); % Possible Breaking Symmetry: if column[i] is equal to column[i+1] then we got 2 symmetric solutions: 
+% the one that appears scene_variables_order[i] first than scene_variables_order[i+1] and the other one that has scene_variables_order[i+1] appearing first than appears scene_variables_order[i]
+% We can break this symmetry by preserving the one solution that has scene_variables_order[i] first than scene_variables_order[i+1], imposing an order scene_variables_order[i] < scene_variables_order[i+1]
+
+constraint forall(i in 1..number_of_scenes-1, j in i+1..number_of_scenes) (if [only_scenes_decision_variable[k,i] | k in 1..rows] = [only_scenes_decision_variable[k,j] | k in 1..rows] then scenes_variable_order[i] < scenes_variable_order[j] endif); % Possible Breaking Symmetry: if some column[i] is equal to some column[j] (where j > i), then we
+% only preserve the solution where scene_variables_order[i] < scene_variables_order[j]
 
 function var int: getIndexOfFirstOcurrence(int: num, 
                                array[int] of var int: arr) = 
@@ -61,6 +66,6 @@ solve minimize f;
 
 array[int] of var 0..1: arraysito = [only_scenes_decision_variable[j,6] | j in 1..length(ACTORES)];
 
-output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(arr1)\n\(variable_duration)\n\(arr2)\n\(individual_costs)\n\(f)\n\(arraysito)"];
+%output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(arr1)\n\(variable_duration)\n\(arr2)\n\(individual_costs)\n\(f)\n\(arraysito)"];
 
-%output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)"];
+output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)"];
