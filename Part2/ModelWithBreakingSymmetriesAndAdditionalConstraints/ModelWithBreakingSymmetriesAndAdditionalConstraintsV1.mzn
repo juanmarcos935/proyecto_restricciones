@@ -64,8 +64,6 @@ array[int] of var int: total_time_in_set_for_each_actor = getTotalTimes(array_of
 var int: f = sum([total_time_in_set_for_each_actor[i] * individual_costs[i] | i in 1..rows]);
 % This is the objective function to minimize
 
-solve minimize f;
-% Minimize objective function
 
 % ---------------------------------- Ending of Solution to Problem ---------------------------------- %
 
@@ -96,10 +94,20 @@ constraint forall(i in 1..number_of_zero_columns) (scenes_variable_order[i] = ar
 
 constraint forall(i in 1..rows) (if Disponibilidad[i,2] > 0 then total_time_in_set_for_each_actor[i] <= Disponibilidad[i,2] endif); % This constraint consists in impose the individual constraint of time in set for each actor in case they had a time limit, in case they don't have the time limit it is because in the input is represented by a 0 in that value. 
 
+function var int: getSharedTime(array[int,int] of var int: matrix, array[int] of var int: pair) =
+  sum([if matrix[pair[1],k] = 1 /\ matrix[pair[2],k] = 1 then variable_duration[k] else 0 endif | k in 1..number_of_scenes]);
+
+array[int] of var int: times_shared_by_each_actors_that_avoid_themselves = [getSharedTime(only_scenes_decision_variable, [Evitar[i,j] | i in 1..length(Evitar) div 2]) | j in 1..2];
+
+var int: g = sum(times_shared_by_each_actors_that_avoid_themselves);
+
+solve minimize f + g;
+% Minimize objective function: total cost (f) and shared time between actors that avoid themselves (g)
+
 % ---------------------------------- Ending of Additional Constraints ---------------------------------- %
 
 % ---------------------------------- Beginning of Output ---------------------------------- %
 
-output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f) \(total_time_in_set_for_each_actor)"];
+output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)\nTiempo Compartido: \(g)"];
 
 % ---------------------------------- Ending of Output ---------------------------------- %
