@@ -36,6 +36,11 @@ function var int: getIndexOfFirstOcurrence(int: num,
    min([if num = arr[i] then i else length(arr) endif | i in index_set(arr)]);
 % This function gets the position of the first ocurrence of an specific element in an array, for example, given element 1 and array [0, 0, 1, 0, 1, 1], it returns 3
 
+function var int: getIndexOfFirstOcurrenceVar(var int: num, 
+                               array[int] of var int: arr) = 
+   min([if num = arr[i] then i else length(arr) endif | i in index_set(arr)]);
+% This function gets the position of the first ocurrence of an specific element in an array, for example, given element 1 and array [0, 0, 1, 0, 1, 1], it returns 3
+
 function var int: getIndexOfLastOcurrence(int: num, 
                                array[int] of var int: arr) = 
    max([if num = arr[i] then i else -length(arr) endif | i in index_set(arr)]);
@@ -76,6 +81,11 @@ constraint forall(i in 1..number_of_scenes-1) (if [only_scenes_decision_variable
 constraint forall(i in 1..number_of_scenes-1, j in i+1..number_of_scenes) (if [only_scenes_decision_variable[k,i] | k in 1..rows] = [only_scenes_decision_variable[k,j] | k in 1..rows] then scenes_variable_order[i] < scenes_variable_order[j] endif); % Possible Breaking Symmetry: if some column[i] is equal to some column[j] (where j > i), then we
 % only preserve the solution where scene_variables_order[i] < scene_variables_order[j]
 
+function var int: getDistanceBetweenTwoScenes(array[int] of var int: scene_order, var int: scene1, var int: scene2) =
+  abs(getIndexOfFirstOcurrenceVar(scene1, scene_order) - getIndexOfFirstOcurrenceVar(scene2, scene_order));
+
+% constraint forall(i in 1..number_of_scenes-1, j in i+1..number_of_scenes) (if [only_scenes_decision_variable[k,i] | k in 1..rows] = [only_scenes_decision_variable[k,j] | k in 1..rows] then getDistanceBetweenTwoScenes(scenes_variable_order, i, j) = 1 endif); For fixing
+
 function int: getNumberOfZeroColumnsInMatrix(array[int,int] of int: arr, int: n_scenes, int: n_rows) = 
   sum([if [arr[j,i] | j in 1..n_rows] = [0 | j in 1..n_rows] then 1 else 0 endif| i in 1..n_scenes]);
 
@@ -87,6 +97,8 @@ function array[1..number_of_zero_columns] of int: getWhichColumnsAreZeroColumns(
 array[1..number_of_zero_columns] of int: array_of_zero_columns = getWhichColumnsAreZeroColumns(only_scenes_initial, number_of_scenes, rows);
 
 constraint forall(i in 1..number_of_zero_columns) (scenes_variable_order[i] = array_of_zero_columns[i]); % This constraint models that if there is 1 or more than 1 "zero columns" (columns that are all zeros) they will be placed at the beginning of the scheduling, so the solver can ignore all the solutions where he puts the "zero columns" at the end.
+
+
 
 % ---------------------------------- Ending of Breaking-Symmetry Constraints ---------------------------------- %
 
