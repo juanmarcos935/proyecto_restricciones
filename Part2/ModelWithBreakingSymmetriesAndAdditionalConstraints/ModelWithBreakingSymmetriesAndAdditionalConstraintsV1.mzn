@@ -94,12 +94,30 @@ constraint forall(i in 1..number_of_zero_columns) (scenes_variable_order[i] = ar
 
 constraint forall(i in 1..rows) (if Disponibilidad[i,2] > 0 then total_time_in_set_for_each_actor[i] <= Disponibilidad[i,2] endif); % This constraint consists in impose the individual constraint of time in set for each actor in case they had a time limit, in case they don't have the time limit it is because in the input is represented by a 0 in that value. 
 
-function var int: getSharedTime(array[int,int] of var int: matrix, array[int] of var int: pair) =
-  sum([if matrix[pair[1],k] = 1 /\ matrix[pair[2],k] = 1 then variable_duration[k] else 0 endif | k in 1..number_of_scenes]);
+function var set of int: getSharedTime(array[int] of var int: pair) =
+  array_of_intervals_of_each_actor_in_set[pair[1]] intersect array_of_intervals_of_each_actor_in_set[pair[2]];
+% Function that receives a pair of Actors that hate themselves and it is preferly to avoid them having at the same time in the Set, and supported by the array of intervals of times it intersects the intervals where the two Actors are in the set, getting the time that is shared by the Actors
 
-array[int] of var int: times_shared_by_each_actors_that_avoid_themselves = [getSharedTime(only_scenes_decision_variable, [Evitar[i,j] | i in 1..length(Evitar) div 2]) | j in 1..2];
+function array[int] of var set of int: getArrayOfSharedTimes(array[int, int] of var int: avoid_matrix) = 
+  [getSharedTime([Evitar[i,j] | j in 1..2]) | i in 1..length(Evitar) div 2];
+% This function receives the matrix that imposes the avoid property between pairs of Actors and returns the Shared Times in the Set of each pair of Actors that hate themselves, using the above function.
 
-var int: g = sum(times_shared_by_each_actors_that_avoid_themselves);
+array[int] of var set of int: array_of_intervals_shared_time_of_actors_that_avoid_themselves = getArrayOfSharedTimes(Evitar);
+% This array representes the intervals of time of the current pairs of Actors that is better avoid stay at same time in Set
+
+function var int: getIntegerTimeShared(var set of int: interval) =
+  sum([variable_duration[i] | i in interval where i > 0]);
+% This function receives and interval (set) of time shared of two Actors and returns the duration in terms of units of time of the time shared by these actors
+
+function array[int] of var int: getTotalIntegerTimeShared(array[int] of var set of int: intervals_shared) =
+  [getIntegerTimeShared(intervals_shared[i]) | i in 1..length(Evitar) div 2];
+% This function receives the resulting intervals that are the times shared by the Actors that avoids themselves and returns an array that has the Total Integer Time Shared by the pairs of actors
+
+array[int] of var int: array_of_total_integer_shared_time_of_actors_that_avoid_themselves = getTotalIntegerTimeShared(array_of_intervals_shared_time_of_actors_that_avoid_themselves);
+% This array has the integer times that actors share in same time on the set, of each pair of actors that hate themselves. 
+
+var int: g = sum(array_of_total_integer_shared_time_of_actors_that_avoid_themselves);
+% This variable g is the total shared time 
 
 solve minimize f + g;
 % Minimize objective function: total cost (f) and shared time between actors that avoid themselves (g)
