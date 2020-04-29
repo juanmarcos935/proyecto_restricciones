@@ -159,6 +159,6 @@ solve minimize f + g;
 
 % ---------------------------------- Beginning of Output ---------------------------------- %
 
-output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)\nTiempo Compartido: \(g)"];
+output ["[\(rows), \(number_of_scenes), \(f), \(g)]\n\(only_scenes_decision_variable)\n\(scenes_variable_order)\n\(variable_duration)\n\(individual_costs)"];
 
 % ---------------------------------- Ending of Output ---------------------------------- %

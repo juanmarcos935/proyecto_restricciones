@@ -62,6 +62,7 @@ array[int] of var int: total_time_in_set_for_each_actor = getTotalTimes(array_of
 var int: f = sum([total_time_in_set_for_each_actor[i] * individual_costs[i] | i in 1..rows]);
 % This is the objective function to minimize
 
+%solve :: int_search(scenes_variable_order, smallest, indomain_min) minimize f;
 solve minimize f;
 % Minimize objective function
 
@@ -69,8 +70,6 @@ solve minimize f;
 
 % ---------------------------------- Beginning of Output ---------------------------------- %
 
-%output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(array_of_intervals_of_each_actor_in_set\n\(variable_duration)\n\(total_time_in_set_for_each_actor)\n\(individual_costs)\n\(f)\n\(number_of_zero_columns)\n\(array_of_zero_columns)"];
-
-output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\nCosto: \(f)"];
+output ["[\(rows), \(number_of_scenes), \(f)]\n\(only_scenes_decision_variable)\n\(scenes_variable_order)\n\(variable_duration)\n\(individual_costs)"];
 
 % ---------------------------------- Ending of Output ---------------------------------- %

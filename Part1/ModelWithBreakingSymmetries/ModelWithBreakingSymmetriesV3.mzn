@@ -125,8 +125,6 @@ constraint forall(i in 1..number_of_zero_columns) (scenes_variable_order[i] = ar
 
 % ---------------------------------- Beginning of Output ---------------------------------- %
 
-%output ["/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas original (provisto en la Entrada): \n" ++ "  \(initial_sequence_scenes)\n" ++ show2d(only_scenes_initial) ++ "/////////////////////////////////////////////////// \n" ++ "Matriz y Orden de Escenas óptimo: \n" ++ "  \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable)] ++ ["\(array_of_intervals_of_each_actor_in_set\n\(variable_duration)\n\(total_time_in_set_for_each_actor)\n\(individual_costs)\n\(f)\n\(number_of_zero_columns)\n\(array_of_zero_columns)"];
-
-output ["Solución: \nOrden de las Escenas: \(scenes_variable_order)\n" ++ show2d(only_scenes_decision_variable) ++ "\nCosto: \(f)\n\(scenes_variable_order_lex)\n" ++ show2d(only_scenes_decision_variable_lex)];
+output ["[\(rows), \(number_of_scenes), \(f)]\n\(only_scenes_decision_variable)\n\(scenes_variable_order)\n\(variable_duration)\n\(individual_costs)"];
 
 % ---------------------------------- Ending of Output ---------------------------------- %
