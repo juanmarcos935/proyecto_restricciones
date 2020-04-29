@@ -152,7 +152,10 @@ array[int] of var int: array_of_total_integer_shared_time_of_actors_that_avoid_t
 var int: g = sum(array_of_total_integer_shared_time_of_actors_that_avoid_themselves);
 % This variable g is the total shared time 
 
-solve minimize f + g;
+%solve :: int_search(scenes_variable_order, dom_w_deg, indomain_random) minimize f+g; %Estrategia de Búsqueda excelente
+%solve :: int_search(scenes_variable_order, dom_w_deg, indomain_min) minimize f+g; % Estrategia de Búsqueda muy buena
+%solve :: int_search(scenes_variable_order, smallest, indomain_min) minimize f+g; % Estrategia de Búsqueda buena
+solve minimize f+g;
 % Minimize objective function: total cost (f) and shared time between actors that avoid themselves (g)
 
 % ---------------------------------- Ending of Additional Constraints ---------------------------------- %

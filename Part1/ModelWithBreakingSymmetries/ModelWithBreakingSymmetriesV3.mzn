@@ -67,6 +67,9 @@ array[int] of var int: total_time_in_set_for_each_actor = getTotalTimes(array_of
 var int: f = sum([total_time_in_set_for_each_actor[i] * individual_costs[i] | i in 1..rows]);
 % This is the objective function to minimize
 
+%solve :: int_search(scenes_variable_order, smallest, indomain_min) minimize f; % Estrategia de Búsqueda excelente
+%solve :: int_search(scenes_variable_order, first_fail, indomain_split) minimize f; % Estrategia de Búsqueda muy buena
+%solve :: int_search(scenes_variable_order, input_order, indomain_median) minimize f; % Estrategia de Búsqueda buena
 solve minimize f;
 % Minimize objective function
 
