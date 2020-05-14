@@ -13,13 +13,6 @@ array[int] of int: Duracion;
 int: rows = length(ACTORES); % rows: the number of rows of the Scenes matrix (provided by the number of Actors)
 int: cols = length(Duracion) + 1; % cols: number of columns, the additional 1 indicates the column of Costs of the Actors
 int: number_of_scenes = length(Duracion); % number_of_scenes: the real number of scenes (it is the number of columns minus 1, because we don't take the column of Costs of the Actors), int: number_of_scenes = cols - 1;
-
-array[1..number_of_scenes] of var 1..number_of_scenes: initial_sequence_scenes; % Only for showing in output
-constraint alldifferent(initial_sequence_scenes); % Only for showing in output (temporary)
-constraint increasing(initial_sequence_scenes); % Original sequence of scenes given in input
-
-array[1..rows, 1..number_of_scenes] of 0..1: only_scenes_initial = array2d(1..rows, 1..number_of_scenes, [Escenas[i,j] | i in 1..rows, j in 1..number_of_scenes]); % Initial Scenes (without Cost's column) given in Input
-
 array[1..rows] of int: individual_costs = [Escenas[i, cols] | i in 1..rows];
 
 % This array is very important, it is the decision variables array: scenes_variable_order. Thanks to this array we can move and variate the order of the scenes, and Solver can find the matrix that feases the constraints and the objective function of minimizing cost
@@ -62,10 +55,10 @@ array[int] of var int: total_time_in_set_for_each_actor = getTotalTimes(array_of
 var int: f = sum([total_time_in_set_for_each_actor[i] * individual_costs[i] | i in 1..rows]);
 % This is the objective function to minimize
 
-%solve :: int_search(scenes_variable_order, smallest, indomain_min) minimize f; % Estrategia de Búsqueda buena
+solve :: int_search(scenes_variable_order, smallest, indomain_min) minimize f; % Estrategia de Búsqueda buena
 %solve :: int_search(scenes_variable_order, first_fail, indomain_split) minimize f; % Estrategia de Búsqueda promedio (similar a sin estrategia)
 %solve :: int_search(scenes_variable_order, input_order, indomain_median) minimize f; % Estrategia de Búsqueda mala
-solve minimize f;
+%solve minimize f;
 % Minimize objective function
 
 % ---------------------------------- Ending of Solution to Problem ---------------------------------- %
