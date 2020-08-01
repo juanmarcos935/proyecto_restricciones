@@ -1,4 +1,4 @@
-<h1>Constraint Programming Final Project (Proyecto final de Programación por Restricciones)</h1>
+<h1>Constraint Programming Final Project: Actors Scheduling (Proyecto final de Programación por Restricciones: Programación de Actores)</h1>
 <img src="https://i.ibb.co/FsfDWRm/Captura-de-pantalla-de-2020-07-31-20-43-28.png">
 <p><b> English: </b>  </p>
 <p><b> Español: </b>  </p>
